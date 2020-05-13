@@ -67,7 +67,8 @@ const newGame = () => {
         const questionAsker = (anArrOfQuestions) => {
           //prompt the question
           //make an array of all the wrong answers
-          newBadAnswers = anArrOfQuestions[i].incorrect_answers.map(he.decode())
+          newBadAnswers = anArrOfQuestions[i].incorrect_answers.map(val => {
+            return he.decode(val)})
           let allAnswersArr = newBadAnswers
           //insert the correct answer at a random index
           //if we add it to a consistent place, attentive users can cheat
@@ -112,7 +113,13 @@ const newGame = () => {
                 message: 'Enter a username for your high score to be recorded'
               }
               inquirer.prompt(userNamePromptObject)
-              .then(data => console.log(data))
+              .then(({userName}) => {
+                let myNewScoreObject = {
+                  name: userName,
+                  score: userScore
+                }
+                fs.appendFile('leaderboard.json', JSON.stringify(myNewScoreObject), err => {if(err)console.log(err)})
+              })
             }
           })
         }
