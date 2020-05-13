@@ -4,6 +4,7 @@
 //Style correct/incorrect answers with chalk
 //Verify the user is getting 10 questions
 //Change the # of points you get for a question based on the difficulty
+//Change the JSON write to parse the file, append the new score, then save the file -- DONE
 
 //Require dependencies
 inquirer = require('inquirer')
@@ -14,6 +15,7 @@ he = require('he')
 
 //Define global vars
 let userScore = 0
+let myBigFatJSONArray = []
 
 //Display the main screen
 const mainScreenDisplayer = () => {
@@ -118,7 +120,11 @@ const newGame = () => {
                   name: userName,
                   score: userScore
                 }
-                fs.appendFile('leaderboard.json', JSON.stringify(myNewScoreObject), err => {if(err)console.log(err)})
+                let rawdata = fs.readFileSync('leaderboard.json')
+                myBigFatJSONArray = JSON.parse(rawdata);
+                myBigFatJSONArray.push(myNewScoreObject)
+                fs.writeFileSync('leaderboard.json', JSON.stringify(myBigFatJSONArray), err => {if(err)console.log(err)})
+                mainScreenDisplayer()
               })
             }
           })
@@ -130,7 +136,25 @@ const newGame = () => {
 }
 
 //Display the LeaderBoard
-const viewLeaderBoard = () => {console.log('leader Board')}
+const viewLeaderBoard = () => {
+  let rawdata = fs.readFileSync('leaderboard.json')
+  let scores = JSON.parse(rawdata);
+  let sortedScores = scores.sort((a,b) => {
+    return b.score - a.score
+  })
+  for(let index in sortedScores){
+    console.log(`#${parseInt(index) + 1} || ${sortedScores[index].name} || ${sortedScores[index].score} points`)
+  }
+  let myFakePromptObject = {
+    type: 'input',
+    name: 'doesntMatter',
+    message: 'Press Enter to return to the main menu...'
+  }
+  inquirer.prompt(myFakePromptObject)
+  .then(data => {
+    mainScreenDisplayer()
+  })
+}
 
 //Run the main menu to start the game
 mainScreenDisplayer()
