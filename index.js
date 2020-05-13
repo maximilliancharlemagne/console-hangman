@@ -1,9 +1,9 @@
 //The main file for the game
 
 //TO DO:
-//Style correct/incorrect answers with chalk
+//Style correct/incorrect answers with chalk -- DONE
 //Verify the user is getting 10 questions -- DONE/fixed
-//Change the # of points you get for a question based on the difficulty
+//Change the # of points you get for a question based on the difficulty -- DONE
 //Change the JSON write to parse the file, append the new score, then save the file -- DONE
 
 //Require dependencies
@@ -89,9 +89,24 @@ const newGame = () => {
           inquirer.prompt(myNewQuestionObject)
           .then(({userAnswer}) => {
             console.log(`Your answer was: ${userAnswer}`)
+            let questionWorth
+            switch (anArrOfQuestions[i].difficulty) {
+              case 'easy':
+                questionWorth = 1
+                break;
+              case 'medium':
+                questionWorth = 3
+                break;
+              case 'hard':
+                questionWorth = 5
+                break;
+              default:
+                questionWorth = 3
+                break;
+            }
             if(userAnswer == anArrOfQuestions[i].correct_answer){
               console.log(chalk.green(`That answer was correct!`)) //style this with chalk later
-              userScore++
+              userScore+=questionWorth
               console.log(`Your new score is ${userScore} points`)
             }
             else{
