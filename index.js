@@ -123,7 +123,7 @@ const newGame = () => {
               questionAsker(questionArr)
             }
             else{
-              console.log(`Your final score was ${userScore} points out of a possible 10`)
+              console.log(`Your final score was ${userScore} points)
               let userNamePromptObject = {
                 type: 'input',
                 name: 'userName',
