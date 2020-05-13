@@ -1,0 +1,31 @@
+{
+  "name": "console-hangman",
+  "version": "1.0.0",
+  "description": "a hangman game you play in the node.js console",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximilliancharlemagne/console-hangman.git"
+  },
+  "keywords": [
+    "game",
+    "console",
+    "node",
+    "javascript"
+  ],
+  "author": "Maxwell K Roberts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maximilliancharlemagne/console-hangman/issues"
+  },
+  "homepage": "https://github.com/maximilliancharlemagne/console-hangman#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "chalk": "^4.0.0",
+    "he": "^1.2.0",
+    "inquirer": "^7.1.0"
+  }
+}
