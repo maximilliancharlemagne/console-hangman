@@ -6,6 +6,9 @@ chalk = require('chalk')
 fs = require('fs') //we <3 builtins
 axios = require('axios')
 
+//Define global vars
+let userScore = 0
+
 //Display the main screen
 const mainScreenDisplayer = () => {
   //Prompt the user with a menu
@@ -29,6 +32,8 @@ const mainScreenDisplayer = () => {
 
 //Start a new game
 const newGame = () => {
+  userScore = 0 //reset score
+
   //display a list of available categories
   //make dat API call
   axios.get('https://opentdb.com/api_category.php')
@@ -47,7 +52,6 @@ const newGame = () => {
         return val.name == userCategory
       })
       userCategory = userCategoryArr[0] //get it out of the array
-      console.log(userCategory)
       //make another API call to get a list of 10 questions from that category
       axios.get(`https://opentdb.com/api.php?amount=10&category=${userCategory.id}`)
       .then(({data}) => {
@@ -74,8 +78,16 @@ const newGame = () => {
           }
           inquirer.prompt(myNewQuestionObject)
           .then(({userAnswer}) => {
-            console.log(userAnswer)
-            console.log(userAnswer == anArrOfQuestions[i].correct_answer)
+            console.log(`Your answer was: ${userAnswer}`)
+            if(userAnswer == anArrOfQuestions[i].correct_answer){
+              console.log(`That answer was correct!`) //style this with chalk later
+              userScore++
+              console.log(`Your new score is ${userScore} points`)
+            }
+            else{
+              console.log(`That answer was incorrect.`)
+              console.log(`Your score is still ${userScore} points`)
+            }
             return userAnswer
             })
           //depending on whether the answer was correct or incorrect
