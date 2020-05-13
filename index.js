@@ -12,11 +12,12 @@ const mainScreenDisplayer = () => {
   let mainMenuObject = {
     type: 'list',
     name: 'userChoice',
-    message: 'Please select an option',
+    message: 'Main Menu',
     choices: ['Start New Game','View Leader Board']
   }
   inquirer.prompt(mainMenuObject)
   .then(({ userChoice }) => {
+    console.log(`You selected: ${userChoice}`)
     if(userChoice == 'Start New Game'){
       newGame()
     }
@@ -27,7 +28,24 @@ const mainScreenDisplayer = () => {
 }
 
 //Start a new game
-const newGame = () => {console.log('new Game')}
+const newGame = () => {
+  //display a list of available categories
+  //make dat API call
+  axios.get('https://opentdb.com/api_category.php')
+  .then(({ data }) => {
+    myCategories = data.trivia_categories
+    let myCategoryPromptObject = {
+      type: 'list',
+      name: 'userCategory',
+      message: 'Please select a trivia category from the list below.',
+      choices: myCategories
+    }
+    inquirer.prompt(myCategoryPromptObject)
+    .then(({ userCategory }) => {
+      //make another API call to get a list of 10 questions from that category
+    })
+  })
+}
 
 //Display the LeaderBoard
 const viewLeaderBoard = () => {console.log('leader Board')}
