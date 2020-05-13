@@ -1,10 +1,16 @@
 //The main file for the game
 
+//TO DO:
+//Style correct/incorrect answers with chalk
+//Verify the user is getting 10 questions
+//Change the # of points you get for a question based on the difficulty
+
 //Require dependencies
 inquirer = require('inquirer')
 chalk = require('chalk')
 fs = require('fs') //we <3 builtins
 axios = require('axios')
+he = require('he')
 
 //Define global vars
 let userScore = 0
@@ -61,7 +67,8 @@ const newGame = () => {
         const questionAsker = (anArrOfQuestions) => {
           //prompt the question
           //make an array of all the wrong answers
-          let allAnswersArr = anArrOfQuestions[i].incorrect_answers
+          newBadAnswers = anArrOfQuestions[i].incorrect_answers.map(he.decode())
+          let allAnswersArr = newBadAnswers
           //insert the correct answer at a random index
           //if we add it to a consistent place, attentive users can cheat
           //and I
@@ -69,11 +76,11 @@ const newGame = () => {
           // RESPECTABLE
           // JAVASCRIPT
           myIndex = Math.floor(Math.random() * allAnswersArr.length) //fixed this - Math.random() missing parentheses
-          allAnswersArr.splice(myIndex,0,anArrOfQuestions[i].correct_answer)
+          allAnswersArr.splice(myIndex,0,he.decode(anArrOfQuestions[i].correct_answer))
           let myNewQuestionObject = {
             type: 'list',
             name: 'userAnswer',
-            message: `${anArrOfQuestions[i].question}`,
+            message: `${he.decode(anArrOfQuestions[i].question)}`,
             choices: allAnswersArr
           }
           inquirer.prompt(myNewQuestionObject)
@@ -86,7 +93,6 @@ const newGame = () => {
             }
             else{
               console.log(`That answer was incorrect.`)
-              console.log(`Your score is still ${userScore} points`)
             }
             return userAnswer
             })
@@ -95,8 +101,18 @@ const newGame = () => {
           //then add one to i
           .then(data => {
             i++
-            if (i < questionArr.length - 1) {
+            if (i < questionArr.length ) {
               questionAsker(questionArr)
+            }
+            else{
+              console.log(`Your final score was ${userScore} points out of a possible 10`)
+              let userNamePromptObject = {
+                type: 'input',
+                name: 'userName',
+                message: 'Enter a username for your high score to be recorded'
+              }
+              inquirer.prompt(userNamePromptObject)
+              .then(data => console.log(data))
             }
           })
         }
