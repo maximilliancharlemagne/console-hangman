@@ -42,7 +42,40 @@ const newGame = () => {
     }
     inquirer.prompt(myCategoryPromptObject)
     .then(({ userCategory }) => {
+      //get the id for that category
+      userCategoryArr = myCategories.filter((val) => { //get name and id from just name
+        return val.name == userCategory
+      })
+      userCategory = userCategoryArr[0] //get it out of the array
+      console.log(userCategory)
       //make another API call to get a list of 10 questions from that category
+      axios.get(`https://opentdb.com/api.php?amount=10&category=${userCategory.id}`)
+      .then(({data}) => {
+        let responseCode = data.response_code
+        let questionArr = data.results
+        for(let index in questionArr){
+          //prompt the question
+          //make an array of all the wrong answers
+          let allAnswersArr = questionArr[index].incorrect_answers
+          //insert the correct answer at a random index
+          //if we add it to a consistent place, attentive users can cheat
+          //and I
+          // WRITE
+          // RESPECTABLE
+          // JAVASCRIPT
+          allAnswersArr.splice(Math.floor(Math.random*allAnswersArr.length),0,questionArr[index].correct_answer)
+          let myNewQuestionObject = {
+            type: 'list',
+            name: 'userAnswer',
+            message: `${questionArr[index].question}`,
+            choices: allAnswersArr
+          }
+          inquirer.prompt(myNewQuestionObject)
+          .then(data => console.log(data))
+          //depending on whether the answer was correct or incorrect
+          //show the appropriate screen
+        }
+      })
     })
   })
 }
