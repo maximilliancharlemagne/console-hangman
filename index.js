@@ -2,7 +2,7 @@
 
 //TO DO:
 //Style correct/incorrect answers with chalk
-//Verify the user is getting 10 questions
+//Verify the user is getting 10 questions -- DONE/fixed
 //Change the # of points you get for a question based on the difficulty
 //Change the JSON write to parse the file, append the new score, then save the file -- DONE
 
@@ -90,12 +90,12 @@ const newGame = () => {
           .then(({userAnswer}) => {
             console.log(`Your answer was: ${userAnswer}`)
             if(userAnswer == anArrOfQuestions[i].correct_answer){
-              console.log(`That answer was correct!`) //style this with chalk later
+              console.log(chalk.green(`That answer was correct!`)) //style this with chalk later
               userScore++
               console.log(`Your new score is ${userScore} points`)
             }
             else{
-              console.log(`That answer was incorrect.`)
+              console.log(chalk.red(`That answer was incorrect.`))
             }
             return userAnswer
             })
