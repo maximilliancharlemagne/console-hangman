@@ -53,28 +53,42 @@ const newGame = () => {
       .then(({data}) => {
         let responseCode = data.response_code
         let questionArr = data.results
-        for(let index in questionArr){
+        let i = 0
+        const questionAsker = (anArrOfQuestions) => {
           //prompt the question
           //make an array of all the wrong answers
-          let allAnswersArr = questionArr[index].incorrect_answers
+          let allAnswersArr = anArrOfQuestions[i].incorrect_answers
           //insert the correct answer at a random index
           //if we add it to a consistent place, attentive users can cheat
           //and I
           // WRITE
           // RESPECTABLE
           // JAVASCRIPT
-          allAnswersArr.splice(Math.floor(Math.random*allAnswersArr.length),0,questionArr[index].correct_answer)
+          myIndex = Math.floor(Math.random() * allAnswersArr.length) //fixed this - Math.random() missing parentheses
+          allAnswersArr.splice(myIndex,0,anArrOfQuestions[i].correct_answer)
           let myNewQuestionObject = {
             type: 'list',
             name: 'userAnswer',
-            message: `${questionArr[index].question}`,
+            message: `${anArrOfQuestions[i].question}`,
             choices: allAnswersArr
           }
           inquirer.prompt(myNewQuestionObject)
-          .then(data => console.log(data))
+          .then(({userAnswer}) => {
+            console.log(userAnswer)
+            console.log(userAnswer == anArrOfQuestions[i].correct_answer)
+            return userAnswer
+            })
           //depending on whether the answer was correct or incorrect
           //show the appropriate screen
+          //then add one to i
+          .then(data => {
+            i++
+            if (i < questionArr.length - 1) {
+              questionAsker(questionArr)
+            }
+          })
         }
+        questionAsker(questionArr)
       })
     })
   })
